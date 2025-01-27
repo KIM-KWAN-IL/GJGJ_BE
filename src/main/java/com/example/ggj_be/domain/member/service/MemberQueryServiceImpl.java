@@ -35,7 +35,7 @@ public class MemberQueryServiceImpl implements MemberQueryService {
     }
 
     @Override
-    public Member checkAccountIdandPwd(AuthRequest.LoginRequest loginRequest) {
+    public Member checkAccountIdAndPwd(AuthRequest.LoginRequest loginRequest) {
 
         Member member = memberRepository.findByAccountId(
                 loginRequest.getAccountId()).orElseThrow(

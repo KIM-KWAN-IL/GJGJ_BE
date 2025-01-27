@@ -1,5 +1,6 @@
 package global.jwt;
 
+import com.example.ggj_be.domain.enums.Role;
 import global.exception.ApiException;
 import global.response.code.status.ErrorStatus;
 import global.security.CustomUserDetailService;
@@ -23,7 +24,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import javax.management.relation.Role;
 
 import static global.util.JwtProperties.ROLE;
 
