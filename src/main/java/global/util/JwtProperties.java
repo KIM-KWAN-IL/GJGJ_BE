@@ -6,5 +6,5 @@ public interface JwtProperties {
     String ACCESS_HEADER_STRING = "Authorization";
     String REFRESH_HEADER_STRING = "RefreshToken";
     String ROLE = "role";
-    String EMPLOYEE_ID_KEY = "id";
+    String MEMBER_ID_KEY = "id";
 }

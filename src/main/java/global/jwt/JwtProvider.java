@@ -1,13 +1,9 @@
 package global.jwt;
 
-import static clovider.clovider_be.global.util.JwtProperties.EMPLOYEE_ID_KEY;
-import static clovider.clovider_be.global.util.JwtProperties.ROLE;
-
-import clovider.clovider_be.domain.enums.Role;
-import clovider.clovider_be.global.exception.ApiException;
-import clovider.clovider_be.global.response.code.status.ErrorStatus;
-import clovider.clovider_be.global.security.CustomUserDetailService;
-import clovider.clovider_be.global.util.RedisUtil;
+import global.exception.ApiException;
+import global.response.code.status.ErrorStatus;
+import global.security.CustomUserDetailService;
+import global.util.RedisUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -19,12 +15,17 @@ import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import static global.util.JwtProperties.MEMBER_ID_KEY;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import javax.management.relation.Role;
+
+import static global.util.JwtProperties.ROLE;
 
 @Component
 public class JwtProvider {
@@ -51,12 +52,12 @@ public class JwtProvider {
      * JWT header "alg" : "HS512" payload "id" : "employeeId" payload "auth" : "EMPLOYEE/ADMIN"
      * payload "iat" : "123456789" payload "exp" : "123456789"
      */
-    public String generateAccessToken(Long employeeId, Role role) {
+    public String generateAccessToken(Long memberId, Role role) {
 
         Date expiredAt = new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_TIME);
 
         return Jwts.builder()
-                .claim(EMPLOYEE_ID_KEY, employeeId)
+                .claim(MEMBER_ID_KEY, memberId)
                 .claim(ROLE, role)
                 .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
                 .setExpiration(expiredAt)
@@ -68,7 +69,7 @@ public class JwtProvider {
 
         Date expiredAt = new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE_TIME);
         return Jwts.builder()
-                .claim(EMPLOYEE_ID_KEY, employeeId)
+                .claim(MEMBER_ID_KEY, employeeId)
                 .claim(ROLE, role)
                 .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
                 .setExpiration(expiredAt)
@@ -78,7 +79,7 @@ public class JwtProvider {
 
     public Long getEmployeeId(String token) {
         return parseClaims(token)
-                .get(EMPLOYEE_ID_KEY, Long.class);
+                .get(MEMBER_ID_KEY, Long.class);
     }
 
     public Claims parseClaims(String token) {
@@ -108,7 +109,7 @@ public class JwtProvider {
         Claims claims = parseClaims(token);
 
         UserDetails userDetails = customUserDetailService.loadUserByUsername(
-                claims.get(EMPLOYEE_ID_KEY, Long.class).toString());
+                claims.get(MEMBER_ID_KEY, Long.class).toString());
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 userDetails, token,

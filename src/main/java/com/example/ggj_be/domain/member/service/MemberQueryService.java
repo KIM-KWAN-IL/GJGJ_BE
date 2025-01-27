@@ -5,4 +5,9 @@ import com.example.ggj_be.domain.member.Member;
 
 public interface MemberQueryService {
     Member checkAccountIdandPwd(AuthRequest.LoginRequest loginRequest);
+
+    Member getMember (Long id);
+
+    Member findMember(Member member);
+
 }
